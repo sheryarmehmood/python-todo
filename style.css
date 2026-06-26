@@ -1,0 +1,132 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #e4f3f1;
+    color: #000;
+}
+
+.container {
+    width: min(665px, calc(100% - 32px));
+    margin: 68px auto 0;
+}
+
+h1 {
+    margin: 0 0 44px;
+    text-align: center;
+    font-size: 36px;
+    line-height: 1.1;
+}
+
+.row {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 33px;
+}
+
+input {
+    flex: 1;
+    min-width: 0;
+    height: 50px;
+    padding: 0 13px;
+    border: 0;
+    border-radius: 6px;
+    font-size: 20px;
+    outline: none;
+}
+
+input::placeholder {
+    color: #6f6f7a;
+}
+
+button {
+    border: 0;
+    border-radius: 6px;
+    color: #fff;
+    cursor: pointer;
+    font-size: 26px;
+    font-weight: 700;
+}
+
+.row button {
+    width: 83px;
+    height: 50px;
+    background: #8b5ac8;
+}
+
+.task {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    min-height: 65px;
+    margin-bottom: 14px;
+    padding: 11px 13px;
+    background: #fff;
+    border-radius: 5px;
+}
+
+.task-title {
+    overflow-wrap: anywhere;
+    font-size: 22px;
+}
+
+.task.completed .task-title {
+    color: #777;
+    text-decoration: line-through;
+}
+
+.actions {
+    display: flex;
+    flex-shrink: 0;
+    gap: 6px;
+}
+
+.actions button {
+    width: 77px;
+    height: 39px;
+    font-size: 22px;
+}
+
+.actions svg {
+    width: 22px;
+    height: 22px;
+    display: block;
+    margin: auto;
+    fill: currentColor;
+}
+
+.complete-btn {
+    background: #24ad4c;
+}
+
+.edit-btn {
+    background: #f0d20e;
+}
+
+.delete-btn {
+    background: #e83045;
+}
+
+@media (max-width: 560px) {
+    .row {
+        gap: 8px;
+    }
+
+    .row button {
+        width: 58px;
+    }
+
+    .task {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .actions button {
+        flex: 1;
+        width: auto;
+    }
+}
