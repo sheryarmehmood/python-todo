@@ -111,6 +111,76 @@ button {
     background: #e83045;
 }
 
+.modal {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    background: rgba(34, 44, 42, 0.55);
+}
+
+.modal.hidden {
+    display: none;
+}
+
+.modal-box {
+    width: min(430px, 100%);
+    padding: 24px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.25);
+}
+
+.modal-box h2 {
+    margin: 0 0 10px;
+    font-size: 24px;
+}
+
+.modal-box p {
+    margin: 0 0 18px;
+    color: #454545;
+    font-size: 17px;
+    line-height: 1.4;
+}
+
+#modalInput {
+    display: none;
+    width: 100%;
+    margin-bottom: 20px;
+    border: 2px solid #8b5ac8;
+    background: #f7fffe;
+}
+
+.modal.input-mode #modalInput {
+    display: block;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.modal-actions button {
+    min-width: 92px;
+    height: 42px;
+    font-size: 16px;
+}
+
+.modal-ok {
+    background: #8b5ac8;
+}
+
+.modal-cancel {
+    background: #777;
+}
+
+.modal-danger {
+    background: #e83045;
+}
+
 @media (max-width: 560px) {
     .row {
         gap: 8px;

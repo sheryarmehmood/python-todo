@@ -86,6 +86,27 @@ const icons = {
 };
 
 
+const modal =
+    document.getElementById("appModal");
+
+const modalTitle =
+    document.getElementById("modalTitle");
+
+const modalMessage =
+    document.getElementById("modalMessage");
+
+const modalInput =
+    document.getElementById("modalInput");
+
+const modalOk =
+    document.getElementById("modalOk");
+
+const modalCancel =
+    document.getElementById("modalCancel");
+
+let modalResolve = null;
+
+
 function createActionButton(className, iconName, label, onClick) {
 
     const button =
@@ -102,6 +123,96 @@ function createActionButton(className, iconName, label, onClick) {
 }
 
 
+function openModal(options) {
+
+    modalTitle.textContent = options.title;
+    modalMessage.textContent = options.message;
+    modalOk.textContent = options.okText || "OK";
+    modalCancel.textContent = options.cancelText || "Cancel";
+    modalOk.className = options.danger
+        ? "modal-ok modal-danger"
+        : "modal-ok";
+
+    modal.classList.toggle(
+        "input-mode",
+        options.input === true
+    );
+
+    modalInput.value = options.value || "";
+    modalCancel.style.display = options.cancel === false
+        ? "none"
+        : "block";
+
+    modal.classList.remove("hidden");
+    modal.setAttribute("aria-hidden", "false");
+
+    if (options.input) {
+
+        modalInput.focus();
+        modalInput.select();
+
+    } else {
+
+        modalOk.focus();
+
+    }
+
+    return new Promise(resolve => {
+
+        modalResolve = resolve;
+
+    });
+}
+
+
+function closeModal(result) {
+
+    modal.classList.add("hidden");
+    modal.classList.remove("input-mode");
+    modal.setAttribute("aria-hidden", "true");
+
+    if (modalResolve) {
+
+        modalResolve(result);
+        modalResolve = null;
+
+    }
+}
+
+
+function showMessage(title, message) {
+
+    return openModal({
+        title: title,
+        message: message,
+        cancel: false
+    });
+}
+
+
+function confirmAction(title, message, danger = false) {
+
+    return openModal({
+        title: title,
+        message: message,
+        okText: danger ? "Delete" : "OK",
+        danger: danger
+    });
+}
+
+
+function askForText(title, message, value) {
+
+    return openModal({
+        title: title,
+        message: message,
+        input: true,
+        value: value,
+        okText: "Save"
+    });
+}
+
+
 async function addTask() {
 
     const title =
@@ -111,7 +222,10 @@ async function addTask() {
 
     if (!title.trim()) {
 
-        alert("Enter Task");
+        await showMessage(
+            "Missing task",
+            "Please enter a task before adding it."
+        );
 
         return;
     }
@@ -161,16 +275,23 @@ async function toggleTask(id) {
 async function editTask(task) {
 
     const title =
-        prompt("Edit task", task.title);
+        await askForText(
+            "Edit task",
+            "Update your task title.",
+            task.title
+        );
 
-    if (title === null) {
+    if (title === false) {
 
         return;
     }
 
     if (!title.trim()) {
 
-        alert("Task cannot be empty");
+        await showMessage(
+            "Missing task",
+            "Task title cannot be empty."
+        );
 
         return;
     }
@@ -195,6 +316,18 @@ async function editTask(task) {
 
 
 async function deleteTask(id) {
+
+    const confirmed =
+        await confirmAction(
+            "Delete task",
+            "Are you sure you want to delete this task?",
+            true
+        );
+
+    if (!confirmed) {
+
+        return;
+    }
 
     await fetch("/delete-task", {
 
@@ -224,5 +357,52 @@ document
 
         }
     });
+
+modalOk.addEventListener("click", () => {
+
+    closeModal(
+        modal.classList.contains("input-mode")
+            ? modalInput.value
+            : true
+    );
+});
+
+modalCancel.addEventListener("click", () => {
+
+    closeModal(false);
+});
+
+modal.addEventListener("click", event => {
+
+    if (event.target === modal) {
+
+        closeModal(false);
+
+    }
+});
+
+document.addEventListener("keydown", event => {
+
+    if (modal.classList.contains("hidden")) {
+
+        return;
+    }
+
+    if (event.key === "Escape") {
+
+        closeModal(false);
+
+    }
+
+    if (event.key === "Enter") {
+
+        closeModal(
+            modal.classList.contains("input-mode")
+                ? modalInput.value
+                : true
+        );
+
+    }
+});
 
 loadTasks();
